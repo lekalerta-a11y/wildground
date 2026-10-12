@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <title>WildGround</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- MAIN MENU -->
+      <section id="screen-menu" class="screen">
+        <div class="menu-card">
+          <h1 class="title">WILD<span>GROUND</span></h1>
+          <p class="subtitle">A minimal territory-capture arcade game</p>
+          <div class="menu-buttons">
+            <button id="btn-play" class="btn btn-primary">PLAY</button>
+            <button id="btn-skins" class="btn btn-primary" aria-describedby="skins-lock-note">🔒 SKINS</button>
+            <p id="skins-lock-note" class="skins-lock-note">Hold 100,000 $WG to unlock</p>
+            <button id="btn-watch" class="btn btn-primary">WATCH AI</button>
+            <button id="btn-settings" class="btn btn-secondary">SETTINGS</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLAY SETUP -->
+      <section id="screen-play-setup" class="screen hidden">
+        <div class="menu-card">
+          <h2>PLAY</h2>
+          <p class="subtitle">Choose how many bots to play against</p>
+          <div class="slider-row" id="play-bot-slider" data-options="1,2,3,4,5,6" aria-label="Number of opponents">
+            <button class="slider-opt" data-value="1">1</button>
+            <button class="slider-opt" data-value="2">2</button>
+            <button class="slider-opt" data-value="3">3</button>
+            <button class="slider-opt" data-value="4">4</button>
+            <button class="slider-opt" data-value="5">5</button>
+            <button class="slider-opt" data-value="6">6</button>
+          </div>
+          <div class="menu-buttons">
+            <button id="btn-play-start" class="btn btn-primary">START</button>
+            <button class="btn btn-secondary btn-back" data-target="screen-menu">BACK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- WATCH AI SETUP -->
+      <section id="screen-skins" class="screen hidden" aria-labelledby="skins-title">
+        <div class="menu-card menu-card-wide">
+          <h2 id="skins-title">SKINS</h2>
+          <p class="subtitle">Choose your animal. Fill your territory with its emoji and color.</p>
+          <div id="skin-preview" class="skin-preview">
+            <span id="skin-preview-head" aria-hidden="true"></span>
+            <strong id="skin-preview-name"></strong>
+          </div>
+          <div id="skin-grid" class="skin-grid" role="group" aria-label="Player skins"></div>
+          <p id="skin-status" class="skin-status" role="status">Your choice is saved automatically.</p>
+          <div class="menu-buttons">
+            <button class="btn btn-primary btn-back" data-target="screen-menu">DONE</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-skin-access" class="screen hidden" aria-labelledby="skin-access-title">
+        <div class="menu-card menu-card-wide">
+          <h2 id="skin-access-title">UNLOCK SKINS</h2>
+          <p class="subtitle">Hold at least 100,000 WG in your Solana wallet.</p>
+          <p class="skin-status">Checks your standard WG token account used by Phantom and Solflare.</p>
+          <p id="wg-access-status" class="skin-status" role="status">Connect your wallet to check your balance.</p>
+          <p id="wg-wallet-address" class="wallet-address"></p>
+          <p id="wg-wallet-balance" class="wallet-balance"></p>
+          <p class="skin-status">Sign a login message to verify ownership. No payment or token transfer.</p>
+          <div class="menu-buttons">
+            <button id="btn-wg-connect" class="btn btn-primary">CONNECT &amp; CHECK</button>
+            <button id="btn-wg-refresh" class="btn btn-secondary hidden">REFRESH BALANCE</button>
+            <button id="btn-wg-open-skins" class="btn btn-primary hidden">CHOOSE SKIN</button>
+            <button id="btn-wg-disconnect" class="btn btn-secondary hidden">DISCONNECT</button>
+            <button class="btn btn-secondary btn-back" data-target="screen-menu">BACK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- WATCH AI SETUP -->
+      <section id="screen-watch-setup" class="screen hidden">
+        <div class="menu-card">
+          <h2>WATCH AI</h2>
+          <p class="subtitle">Choose how many bots compete</p>
+          <div class="slider-row" id="watch-bot-slider" data-options="2,3,4">
+            <button class="slider-opt" data-value="2">2</button>
+            <button class="slider-opt" data-value="3">3</button>
+            <button class="slider-opt" data-value="4">4</button>
+          </div>
+          <div class="menu-buttons">
+            <button id="btn-watch-start" class="btn btn-primary">START</button>
+            <button class="btn btn-secondary btn-back" data-target="screen-menu">BACK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="screen-settings" class="screen hidden">
+        <div class="menu-card menu-card-wide">
+          <h2>SETTINGS</h2>
+          <p class="subtitle">Default bot counts and brains for each mode</p>
+          <div class="settings-row">
+            <span>PLAY bots</span>
+            <div class="slider-row" id="settings-play-slider" data-options="1,2,3,4,5,6">
+              <button class="slider-opt" data-value="1">1</button>
+              <button class="slider-opt" data-value="2">2</button>
+              <button class="slider-opt" data-value="3">3</button>
+              <button class="slider-opt" data-value="4">4</button>
+              <button class="slider-opt" data-value="5">5</button>
+              <button class="slider-opt" data-value="6">6</button>
+            </div>
+            <div id="settings-play-brains" class="brain-selectors"></div>
+          </div>
+          <div class="settings-row">
+            <span>WATCH AI bots</span>
+            <div class="slider-row" id="settings-watch-slider" data-options="2,3,4">
+              <button class="slider-opt" data-value="2">2</button>
+              <button class="slider-opt" data-value="3">3</button>
+              <button class="slider-opt" data-value="4">4</button>
+            </div>
+            <div id="settings-watch-brains" class="brain-selectors"></div>
+          </div>
+          <div class="menu-buttons">
+            <button class="btn btn-secondary btn-back" data-target="screen-menu">BACK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- IN-GAME HUD -->
+      <section id="hud" class="hidden">
+        <div id="leaderboard" class="panel"></div>
+        <div id="minimap-slot" class="panel"></div>
+        
+        <div id="watch-controls" class="panel hidden">
+          <div class="watch-row">
+            <span class="watch-label">FOLLOW</span>
+            <button id="btn-follow-prev" class="icon-btn">◀</button>
+            <span id="watch-follow-name">-</span>
+            <button id="btn-follow-next" class="icon-btn">▶</button>
+          </div>
+          <div class="watch-row">
+            <span class="watch-label">SPEED</span>
+            <div class="slider-row" id="speed-slider" data-options="0.5,1,2,4">
+              <button class="slider-opt" data-value="0.5">.5x</button>
+              <button class="slider-opt" data-value="1">1x</button>
+              <button class="slider-opt" data-value="2">2x</button>
+              <button class="slider-opt" data-value="4">4x</button>
+            </div>
+          </div>
+          <div class="watch-row">
+            <span class="watch-label">ZOOM</span>
+            <input id="zoom-slider" type="range" min="0.55" max="1.6" step="0.05" value="1" />
+          </div>
+        </div>
+
+        <div id="hint" class="panel hint">ESC pause &middot; H debug</div>
+      </section>
+
+      <!-- DEBUG PANEL -->
+      <section id="debug-panel" class="panel hidden"></section>
+
+      <!-- PAUSE OVERLAY -->
+      <section id="screen-pause" class="screen overlay hidden">
+        <div class="menu-card">
+          <h2>PAUSED</h2>
+          <div class="menu-buttons">
+            <button id="btn-resume" class="btn btn-primary">RESUME</button>
+            <button id="btn-pause-restart" class="btn btn-secondary">RESTART</button>
+            <button id="btn-pause-menu" class="btn btn-secondary">MAIN MENU</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME OVER -->
+      <section id="screen-gameover" class="screen overlay hidden">
+        <div class="menu-card">
+          <h2>GAME OVER</h2>
+          <ol id="results-list" class="results-list"></ol>
+          <div class="menu-buttons">
+            <button id="btn-again" class="btn btn-primary">PLAY AGAIN</button>
+            <button id="btn-gameover-menu" class="btn btn-secondary">MAIN MENU</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
